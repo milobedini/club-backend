@@ -1,5 +1,6 @@
-from ...squad.serializers.common import SquadSerializer
-from .favourite import CommonUserSerializer
+from squad.serializers.common import SquadSerializer
+
+from .members import CommonUserSerializer
 
 
 class PopulatedUserSerializer(CommonUserSerializer):

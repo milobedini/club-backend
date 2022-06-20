@@ -12,6 +12,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from .serializers.common import CommonUserSerializer
+from .serializers.populated import PopulatedUserSerializer
 
 # Create your views here.
 User = get_user_model()
@@ -45,3 +46,23 @@ class LoginView(APIView):
         return Response(
             {"token": token, "message": f"Welcome back {user_to_login.username}", "id": id, "username": username}
         )
+
+
+class ProfileView(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request):
+        print(request.user)
+        user = User.objects.get(id=request.user.id)
+
+        if user != request.user:
+            raise PermissionDenied()
+        serialized_user = PopulatedUserSerializer(user)
+        return Response(serialized_user.data, status=status.HTTP_200_OK)
+
+
+class ProfileListView(APIView):
+    def get(self, request):
+        users = User.objects.all()
+        serialized_users = PopulatedUserSerializer(users, many=True)
+        return Response(serialized_users.data, status=status.HTTP_200_OK)
