@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Squad
+from ..models import Squad
 
 
 class SquadSerializer(serializers.ModelSerializer):
