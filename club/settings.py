@@ -171,4 +171,4 @@ AUTH_USER_MODEL = "jwt_auth.User"
 
 django_on_heroku.settings(locals())
 
-# need to add csrf trusted origins
+CSRF_TRUSTED_ORIGINS = ["https://club-mb.herokuapp.com/"]
