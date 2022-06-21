@@ -111,8 +111,10 @@ if ENV != "DEV":
     DATABASES["default"] = dj_database_url.config(conn_max_age=600, ssl_require=True)
 else:
     DATABASES["default"] = {
-        "ENGINE": "django.db.backends.postgresql",
+        "ENGINE": "django.db.backends.postgresql_psycopg2",
         "NAME": "club",
+        "HOST": "localhost",
+        "PORT": 5432,
     }
 
 
@@ -171,4 +173,4 @@ AUTH_USER_MODEL = "jwt_auth.User"
 
 django_on_heroku.settings(locals())
 
-CSRF_TRUSTED_ORIGINS = ["https://club-mb.herokuapp.com/"]
+CSRF_TRUSTED_ORIGINS = ["https://club-mb.herokuapp.com"]
