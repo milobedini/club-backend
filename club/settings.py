@@ -10,16 +10,27 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
+import os
 from pathlib import Path
+
+import dj_database_url
+import django_on_heroku
+from dotenv import load_dotenv
+
+load_dotenv()
+
 
 import cloudinary
 import cloudinary.api
 import cloudinary.uploader
+from environment import cloudinary_secret
+
+ENV = str(os.getenv("ENVIRONMENT", "DEV"))
 
 cloudinary.config(
     cloud_name="dvgbdioec",
     api_key="836151932961897",
-    api_secret="awlRkH1j-wJz7VDt6X9toWhttoE",
+    api_secret=cloudinary_secret,
 )
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -30,12 +41,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-xl$zd8^z#gsa51$(vn24e(oxe+#04c!o*ynsbt24e-id!r11w&"
+if ENV == "DEV":
+    SECRET_KEY = "django-insecure-xl$zd8^z#gsa51$(vn24e(oxe+#04c!o*ynsbt24e-id!r11w&"
+else:
+    SECRET_KEY = str(os.getenv("SECRET_KEY"))
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = ENV == "DEV"
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -51,11 +65,13 @@ INSTALLED_APPS = [
     "jwt_auth",
     "events",
     "posts",
+    "corsheaders",
     "rest_framework",
     "cloudinary",
 ]
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -64,6 +80,8 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
+
+CORS_ALLOW_ALL_ORIGINS = True
 
 ROOT_URLCONF = "club.urls"
 
@@ -88,14 +106,14 @@ WSGI_APPLICATION = "club.wsgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
-
-
-DATABASES = {
-    "default": {
+DATABASES = {}
+if ENV != "DEV":
+    DATABASES["default"] = dj_database_url.config(conn_max_age=600, ssl_require=True)
+else:
+    DATABASES["default"] = {
         "ENGINE": "django.db.backends.postgresql",
         "NAME": "club",
     }
-}
 
 
 # Password validation
@@ -150,3 +168,7 @@ REST_FRAMEWORK = {
 }
 
 AUTH_USER_MODEL = "jwt_auth.User"
+
+django_on_heroku.settings(locals())
+
+# need to add csrf trusted origins
