@@ -61,6 +61,9 @@ class ProfileView(APIView):
         return Response(serialized_user.data, status=status.HTTP_200_OK)
 
 
+# Only during development - to be modified.
+
+
 class ProfileListView(APIView):
     def get(self, request):
         users = User.objects.all()

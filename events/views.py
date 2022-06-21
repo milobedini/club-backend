@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from .models import Event
-from .serializers.common import EventSerializer
+from .serializers.populated import PopulatedEventSerializer
 
 # Create your views here.
 
@@ -16,5 +16,5 @@ class EventListView(APIView):
 
     def get(self, request):
         events = Event.objects.all()
-        serialized_events = EventSerializer(events, many=True)
+        serialized_events = PopulatedEventSerializer(events, many=True)
         return Response(serialized_events.data, status=status.HTTP_200_OK)

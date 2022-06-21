@@ -25,4 +25,13 @@ class CommonUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ("id", "username", "password", "password_confirmation", "email", "name", "debt")
+        fields = (
+            "id",
+            "username",
+            "password",
+            "password_confirmation",
+            "email",
+            "name",
+            "debt",
+            "attending",
+        )
