@@ -5,3 +5,4 @@ from .common import EventSerializer
 
 class PopulatedEventSerializer(EventSerializer):
     participants = CommonUserSerializer(many=True)
+    financier = CommonUserSerializer()

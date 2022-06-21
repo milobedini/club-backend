@@ -52,7 +52,7 @@ class ProfileView(APIView):
     permission_classes = (IsAuthenticated,)
 
     def get(self, request):
-        print(request.user)
+
         user = User.objects.get(id=request.user.id)
 
         if user != request.user:

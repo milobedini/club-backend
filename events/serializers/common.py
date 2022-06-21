@@ -6,10 +6,4 @@ from ..models import Event
 class EventSerializer(serializers.ModelSerializer):
     class Meta:
         model = Event
-        fields = (
-            "club",
-            "time",
-            "location",
-            "total_cost",
-            "participants",
-        )
+        fields = ("club", "time", "location", "total_cost", "total_players", "participants", "financier")

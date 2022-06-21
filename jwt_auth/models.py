@@ -8,6 +8,7 @@ class User(AbstractUser):
     email = models.CharField(max_length=50, unique=True)
     name = models.CharField(max_length=50)
     squads = models.ManyToManyField("squad.Squad", related_name="members", default=None)
+    admin_squads = models.ManyToManyField("squad.Squad", related_name="admin_members", default=2)
     debt = models.SmallIntegerField(default=0)
     attending = models.ManyToManyField("events.Event", related_name="participants", default=None)
 

@@ -8,8 +8,8 @@ class Squad(models.Model):
     # admin members
     sport = models.CharField(max_length=100)
     recurring = models.BooleanField(default=False)
-    venue = models.CharField(max_length=100, default=None)
-    weekday = models.CharField(max_length=100, default=None)
+    venue = models.CharField(max_length=100, default=None, blank=True)
+    weekday = models.CharField(max_length=100, default=None, blank=True)
     # club icon
 
     def __str__(self):
