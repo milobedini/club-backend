@@ -12,6 +12,16 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 
 from pathlib import Path
 
+import cloudinary
+import cloudinary.api
+import cloudinary.uploader
+
+cloudinary.config(
+    cloud_name="dvgbdioec",
+    api_key="836151932961897",
+    api_secret="awlRkH1j-wJz7VDt6X9toWhttoE",
+)
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -40,7 +50,9 @@ INSTALLED_APPS = [
     "squad",
     "jwt_auth",
     "events",
+    "posts",
     "rest_framework",
+    "cloudinary",
 ]
 
 MIDDLEWARE = [

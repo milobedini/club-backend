@@ -21,4 +21,5 @@ urlpatterns = [
     path("api/squads/", include("squad.urls")),
     path("api/auth/", include("jwt_auth.urls")),
     path("api/events/", include("events.urls")),
+    path("api/posts/", include("posts.urls")),
 ]

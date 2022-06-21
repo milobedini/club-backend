@@ -12,9 +12,9 @@ from .serializers.populated import PopulatedEventSerializer
 
 
 class EventListView(APIView):
-    # permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated,)
 
-    def get(self, request):
-        events = Event.objects.all()
+    def get(self, request, pk):
+        events = Event.objects.filter(club=pk)
         serialized_events = PopulatedEventSerializer(events, many=True)
         return Response(serialized_events.data, status=status.HTTP_200_OK)
