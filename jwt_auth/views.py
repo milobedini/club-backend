@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 import jwt
 from django.conf import settings
 from django.contrib.auth import get_user_model
+from django.db.models import Q
 from django.http.request import HttpRequest
 from django.shortcuts import render
 from rest_framework import status
@@ -71,12 +72,9 @@ class ProfileListView(APIView):
         return Response(serialized_users.data, status=status.HTTP_200_OK)
 
 
-# Ideally want search to check multiple fields.
-
-
 class SearchUsers(APIView):
     def get(self, request, term):
-        users = User.objects.filter(name__icontains=term)
+        users = User.objects.filter(Q(name__icontains=term) | Q(email__icontains=term) | Q(username__icontains=term))
         serialized_users = PopulatedUserSerializer(users, many=True)
 
         return Response(serialized_users.data, status=status.HTTP_200_OK)
