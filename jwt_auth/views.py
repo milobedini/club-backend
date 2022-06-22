@@ -69,3 +69,14 @@ class ProfileListView(APIView):
         users = User.objects.all()
         serialized_users = PopulatedUserSerializer(users, many=True)
         return Response(serialized_users.data, status=status.HTTP_200_OK)
+
+
+# Ideally want search to check multiple fields.
+
+
+class SearchUsers(APIView):
+    def get(self, request, term):
+        users = User.objects.filter(name__icontains=term)
+        serialized_users = PopulatedUserSerializer(users, many=True)
+
+        return Response(serialized_users.data, status=status.HTTP_200_OK)

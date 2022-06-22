@@ -19,7 +19,6 @@ class SquadListView(APIView):
 class SearchSquads(APIView):
     def get(self, request, term):
         squads = Squad.objects.filter(name__icontains=term)
-
         serialized_squads = PopulatedSquadSerializer(squads, many=True)
 
         return Response(serialized_squads.data, status=status.HTTP_200_OK)
