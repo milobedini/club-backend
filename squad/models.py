@@ -8,8 +8,8 @@ class Squad(models.Model):
     name = models.CharField(max_length=100, unique=True)
     sport = models.CharField(max_length=100)
     recurring = models.BooleanField(default=False)
-    venue = models.CharField(max_length=100, default=None, blank=True)
-    weekday = models.CharField(max_length=100, default=None, blank=True)
+    venue = models.CharField(max_length=100, default=None, blank=True, null=True)
+    weekday = models.CharField(max_length=100, default=None, blank=True, null=True)
     image = CloudinaryField("image", blank=True)
 
     def __str__(self):
