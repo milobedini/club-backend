@@ -37,6 +37,10 @@ class EventListView(APIView):
         request.data["club"] = pk
         request.data["participants"] = [request.user.id]
         club = Squad.objects.get(pk=pk)
+        # check if recurring venue
+        if club.venue:
+            request.data["location"] = club.venue
+
         check_if_club_member = club.members.filter(id=request.user.id)
         if len(check_if_club_member) == 0:
             raise PermissionDenied(detail="User is not in this club.")
