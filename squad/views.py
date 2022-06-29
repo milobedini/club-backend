@@ -86,6 +86,9 @@ class AdminControlSquad(APIView):
         if len(check_for_user) != 0:
             # raise PermissionDenied("User already in squad")
             squad_to_update.members.remove(member)
+            # ensure to remove member from the admin list if being removed from squad
+            squad_to_update.admin_members.remove(member)
+
             return Response(
                 {"Success": f"User successfully removed from {squad_to_update.name}"},
                 status=status.HTTP_202_ACCEPTED,
@@ -116,8 +119,7 @@ class UpdateAdmin(APIView):
         check_for_user = squad_to_update.admin_members.filter(id=member)
         if len(check_for_user) != 0:
             squad_to_update.admin_members.remove(member)
-            # also make sure they are no longer a normal member:
-            squad_to_update.members.remove(member)
+
             return Response(
                 {"Success": f"User successfully removed as admin from {squad_to_update.name}"},
                 status=status.HTTP_202_ACCEPTED,
