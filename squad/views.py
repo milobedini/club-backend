@@ -96,3 +96,33 @@ class AdminControlSquad(APIView):
             {"Success": f"Successfully added to {squad_to_update.name}"},
             status=status.HTTP_202_ACCEPTED,
         )
+
+
+class UpdateAdmin(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def put(self, request, pk, member):
+        try:
+            squad_to_update = Squad.objects.get(pk=pk)
+        except Squad.DoesNotExist:
+            raise NotFound("Club not found.")
+
+        # check current user is admin for the club.
+        check_admin = squad_to_update.admin_members.filter(id=request.user.id)
+        if len(check_admin) == 0:
+            raise PermissionDenied(f"User is not an admin member for {squad_to_update.name}")
+
+        # Remove admin if already admin.
+        check_for_user = squad_to_update.admin_members.filter(id=member)
+        if len(check_for_user) != 0:
+            squad_to_update.admin_members.remove(member)
+            return Response(
+                {"Success": f"User successfully removed as admin from {squad_to_update.name}"},
+                status=status.HTTP_202_ACCEPTED,
+            )
+        #  Otherwise add user to squad.
+        squad_to_update.admin_members.add(member)
+        return Response(
+            {"Success": f"Successfully added as admin for {squad_to_update.name}"},
+            status=status.HTTP_202_ACCEPTED,
+        )
