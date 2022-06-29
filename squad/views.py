@@ -116,11 +116,13 @@ class UpdateAdmin(APIView):
         check_for_user = squad_to_update.admin_members.filter(id=member)
         if len(check_for_user) != 0:
             squad_to_update.admin_members.remove(member)
+            # also make sure they are no longer a normal member:
+            squad_to_update.members.remove(member)
             return Response(
                 {"Success": f"User successfully removed as admin from {squad_to_update.name}"},
                 status=status.HTTP_202_ACCEPTED,
             )
-        #  Otherwise add user to squad.
+        #  Otherwise add user as admin.
         squad_to_update.admin_members.add(member)
         return Response(
             {"Success": f"Successfully added as admin for {squad_to_update.name}"},
