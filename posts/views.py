@@ -4,6 +4,7 @@ from rest_framework.exceptions import NotFound, PermissionDenied
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from squad.models import Squad
 
 from posts.serializers.common import PostSerializer
 
@@ -17,6 +18,16 @@ class PostsListView(APIView):
 
     def get(self, request, pk):
         # may need to add check so only a squad member can see and make posts.
+        try:
+            squad = Squad.objects.get(pk=pk)
+        except Squad.DoesNotExist:
+            raise NotFound("Club not found.")
+
+        # check user in squad
+        check_for_user = squad.members.filter(id=request.user.id)
+        if len(check_for_user) == 0:
+            raise PermissionDenied(detail="You must be a member of this club in order to see the feed.")
+
         posts = Post.objects.filter(club=pk)
         serialized_posts = PopulatedPostSerializer(posts, many=True)
         return Response(serialized_posts.data, status=status.HTTP_200_OK)
