@@ -9,3 +9,4 @@ class PopulatedUserSerializer(CommonUserSerializer):
     squads = SquadSerializer(many=True)
     admin_squads = SquadSerializer(many=True)
     attending = PopulatedEventSerializer(many=True)
+    squad_requests = SquadSerializer(many=True)

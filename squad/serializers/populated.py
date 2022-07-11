@@ -6,3 +6,4 @@ from .common import SquadSerializer
 class PopulatedSquadSerializer(SquadSerializer):
     members = CommonUserSerializer(many=True)
     admin_members = CommonUserSerializer(many=True)
+    member_requests = CommonUserSerializer(many=True)

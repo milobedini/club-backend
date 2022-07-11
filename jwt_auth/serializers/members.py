@@ -37,4 +37,5 @@ class CommonUserSerializer(serializers.ModelSerializer):
             "squads",
             "admin_squads",
             "attending",
+            "squad_requests",
         )

@@ -130,3 +130,81 @@ class UpdateAdmin(APIView):
             {"Success": f"Successfully added as admin for {squad_to_update.name}"},
             status=status.HTTP_202_ACCEPTED,
         )
+
+
+class RequestToAdmin(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def put(self, request, pk):
+        try:
+            squad_to_update = Squad.objects.get(pk=pk)
+        except Squad.DoesNotExist:
+            raise NotFound("Club not found.")
+
+        # Check if user already in squad.
+        check_for_user = squad_to_update.members.filter(id=request.user.id)
+        if len(check_for_user) != 0:
+            return Response(
+                {f"{request.user.name} is already in {squad_to_update.name}"},
+                status=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            )
+
+        # Check if user has already made request.
+        check_for_user = squad_to_update.member_requests.filter(id=request.user.id)
+        if len(check_for_user) != 0:
+            return Response(
+                {f"{request.user.name} has already requested to join {squad_to_update.name}"},
+                status=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            )
+
+        #  Create request to join club for current user.
+        squad_to_update.member_requests.add(request.user.id)
+        return Response(
+            {"Success": f"Successfully created request for {request.user.name} to join {squad_to_update.name}"},
+            status=status.HTTP_202_ACCEPTED,
+        )
+
+
+class AdminAccept(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def put(self, request, pk, applicant):
+        try:
+            squad_to_update = Squad.objects.get(pk=pk)
+        except Squad.DoesNotExist:
+            raise NotFound("Club not found.")
+
+            # check current user is admin for the club.
+        check_admin = squad_to_update.admin_members.filter(id=request.user.id)
+        if len(check_admin) == 0:
+            raise PermissionDenied(f"User is not an admin member for {squad_to_update.name}")
+
+        #  Accept applicant into squad.
+        squad_to_update.members.add(applicant)
+        squad_to_update.member_requests.remove(applicant)
+        return Response(
+            {"Success": f"Successfully accepted request for user with id {applicant} to join {squad_to_update.name}"},
+            status=status.HTTP_202_ACCEPTED,
+        )
+
+
+class AdminReject(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def put(self, request, pk, applicant):
+        try:
+            squad_to_update = Squad.objects.get(pk=pk)
+        except Squad.DoesNotExist:
+            raise NotFound("Club not found.")
+
+            # check current user is admin for the club.
+        check_admin = squad_to_update.admin_members.filter(id=request.user.id)
+        if len(check_admin) == 0:
+            raise PermissionDenied(f"User is not an admin member for {squad_to_update.name}")
+
+        #  Reject applicant.
+        squad_to_update.member_requests.remove(applicant)
+        return Response(
+            {"Success": f"Successfully rejected request for user with id {applicant} to join {squad_to_update.name}"},
+            status=status.HTTP_202_ACCEPTED,
+        )

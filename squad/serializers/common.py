@@ -6,4 +6,14 @@ from ..models import Squad
 class SquadSerializer(serializers.ModelSerializer):
     class Meta:
         model = Squad
-        fields = ("id", "name", "sport", "recurring", "venue", "weekday", "members", "admin_members")
+        fields = (
+            "id",
+            "name",
+            "sport",
+            "recurring",
+            "venue",
+            "weekday",
+            "members",
+            "admin_members",
+            "member_requests",
+        )

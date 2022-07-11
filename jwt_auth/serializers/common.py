@@ -35,4 +35,5 @@ class CommonUserSerializer(serializers.ModelSerializer):
             "debt",
             "attending",
             "admin_squads",
+            "squad_requests",
         )
