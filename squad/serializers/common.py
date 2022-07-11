@@ -9,6 +9,7 @@ class SquadSerializer(serializers.ModelSerializer):
         fields = (
             "id",
             "name",
+            "image",
             "sport",
             "recurring",
             "venue",
